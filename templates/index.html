@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Eine kleine Flask-Anwendung für das Deployment-Labor." />
+    <title>Deployment-Labor · Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar">
+        <a class="wordmark" href="{{ url_for('index') }}">
+          <span class="wordmark__mark" aria-hidden="true">08</span>
+          <span>Deployment-Labor</span>
+        </a>
+        <span class="framework-badge">Flask · Python</span>
+      </header>
+
+      <section class="hero">
+        <div class="intro">
+          <p class="eyebrow">HTTP-Experiment</p>
+          <h1>Eine Begrüßung geht online.</h1>
+          <p class="lede">
+            Schicke zwei Werte an den Server. Flask nimmt die Anfrage entgegen, Python baut die
+            Antwort – und Render macht sie öffentlich erreichbar.
+          </p>
+
+          <ol class="request-path" aria-label="Weg der Anfrage">
+            <li>
+              <span class="step-number">01</span>
+              <strong>Browser</strong>
+              <small>sendet das Formular</small>
+            </li>
+            <li>
+              <span class="step-number">02</span>
+              <strong>Flask</strong>
+              <small>prüft die Eingabe</small>
+            </li>
+            <li>
+              <span class="step-number">03</span>
+              <strong>Python</strong>
+              <small>erzeugt die Antwort</small>
+            </li>
+          </ol>
+        </div>
+
+        <div class="experiment">
+          <section class="form-card" aria-labelledby="form-heading">
+            <div class="card-heading">
+              <div>
+                <p class="route-label">POST /</p>
+                <h2 id="form-heading">Anfrage senden</h2>
+              </div>
+              <span class="server-light">
+                <span aria-hidden="true"></span>
+                Server bereit
+              </span>
+            </div>
+
+            <form method="post" novalidate>
+              <div class="field">
+                <label for="first_name">Vorname</label>
+                <input
+                  id="first_name"
+                  name="first_name"
+                  type="text"
+                  value="{{ first_name }}"
+                  autocomplete="given-name"
+                  placeholder="Ada"
+                  required
+                  aria-describedby="{{ 'first-name-error' if errors.first_name else '' }}"
+                  aria-invalid="{{ 'true' if errors.first_name else 'false' }}"
+                />
+                {% if errors.first_name %}
+                <p class="field-error" id="first-name-error">{% print errors.first_name %}</p>
+                {% endif %}
+              </div>
+
+              <div class="field">
+                <label for="last_name">Nachname</label>
+                <input
+                  id="last_name"
+                  name="last_name"
+                  type="text"
+                  value="{{ last_name }}"
+                  autocomplete="family-name"
+                  placeholder="Lovelace"
+                  required
+                  aria-describedby="{{ 'last-name-error' if errors.last_name else '' }}"
+                  aria-invalid="{{ 'true' if errors.last_name else 'false' }}"
+                />
+                {% if errors.last_name %}
+                <p class="field-error" id="last-name-error">{% print errors.last_name %}</p>
+                {% endif %}
+              </div>
+
+              <button type="submit">
+                Begrüßung senden
+                <span aria-hidden="true">→</span>
+              </button>
+            </form>
+          </section>
+
+          <section
+            class="response-card {% if greeting %}response-card--success{% endif %}"
+            aria-live="polite"
+            aria-labelledby="response-heading"
+          >
+            <div class="response-meta">
+              <p id="response-heading">Server-Antwort</p>
+              {% if greeting %}
+              <span class="status status--success">200 OK</span>
+              {% else %}
+              <span class="status">Wartet auf Anfrage</span>
+              {% endif %}
+            </div>
+
+            {% if greeting %}
+            <p class="greeting">{% print greeting %}</p>
+            <p class="response-note">Diese Zeichenkette wurde gerade auf dem Server erzeugt.</p>
+            {% else %}
+            <p class="empty-response">
+              Hier erscheint die Antwort, sobald du das Formular absendest.
+            </p>
+            {% endif %}
+          </section>
+        </div>
+      </section>
+
+      <footer>
+        <p>G-SEAI-008 · Web Service Demo</p>
+        <a href="{{ url_for('health') }}">Health Check <span>/health</span></a>
+      </footer>
+    </main>
+  </body>
+</html>
